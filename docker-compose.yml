@@ -1,0 +1,8 @@
+version: '3'
+services:
+  rabbitmq-node:
+    build: .
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+     - "15675:15675"
