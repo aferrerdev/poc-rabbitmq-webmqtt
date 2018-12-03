@@ -13,25 +13,27 @@
     // Client configuration
     var wsbroker = "localhost"; // mqtt websocket enabled broker
     var wsport = 15675;         // port for above
-    var client = new Paho.MQTT.Client(wsbroker, wsport, "/ws", "myclientid_" + parseInt(Math.random() * 100, 10));
+    var clientId = "myclientid_" + parseInt(Math.random() * 100, 10);
+    var client = new Paho.MQTT.Client(wsbroker, wsport, "/ws", clientId);
+    var messageNumber = 1;
 
     client.onConnectionLost = function (responseObject) {
         console.log("CONNECTION LOST - " + responseObject.errorMessage);
     };
     client.onMessageArrived = function (message) {
+        messageNumber++;
         console.log("RECEIVE ON " + message.destinationName + " PAYLOAD " + message.payloadString);
     };
 
     function sendMessage() {
-        data = { id: 'hola' };
-        message = new Paho.MQTT.Message(JSON.stringify(data));
-        message.destinationName = "/topic/test";
-        client.send(message);
         setInterval(() => {
+            data = { id: 'hola'+messageNumber+'',  clientId: clientId };
+            messageNumber++;
+            message = new Paho.MQTT.Message(JSON.stringify(data));
+            message.destinationName = "/topic/test";
             client.send(message);
-            console.log("SENT");
+            console.log(clientId+" SENT MESSAGE");
         }, 10000);
-        console.log("SENT");
     }
 
     var options = {
