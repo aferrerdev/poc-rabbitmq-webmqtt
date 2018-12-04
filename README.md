@@ -13,11 +13,11 @@ To automate the building of the rabbitmq container I have created some basic fil
     - Management admin user creation.
     - Initialize HTTP Authentication routes for the rabbitmq plugin.
 
-In the init.sh file the following line should be removed in production environments:
+In the init.sh file the following line should be removed for production environments.
+This line enables the access for the user and password: "guest" "guest".
 ```
 {loopback_users, []},
 ``` 
-This line enables the access for the user and password: "guest" "guest".
 
 ## Build the docker architecture
 To run this POC you only need to run docker-compose commands from the root folder of the project:
