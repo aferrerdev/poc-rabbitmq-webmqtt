@@ -5,10 +5,29 @@
 </head>
 
 <body>
-
+    <textarea id="message-text"></textarea>
+    <br>
+    <button onclick="sendMessage()">Send message</button>
+    <div>Conversation:</div>
+    <div id="content"></div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
 <script>
+    messagesStack = "";
+
+    function sendMessage() {
+        data = { message: document.getElementById("message-text").value,  clientId: clientId };
+        messageNumber++;
+        message = new Paho.MQTT.Message(JSON.stringify(data));
+        message.destinationName = "/topic/test";
+        client.send(message);
+        console.log(clientId+" SENT MESSAGE");
+    }
+
+    function addMessages(user, message) {
+        var html = document.getElementById("content").innerHTML + '<p>'+ user +':'+ message + '</p>'
+        document.getElementById("content").innerHTML = html;
+    }
 
     // Client configuration
     var wsbroker = "localhost"; // mqtt websocket enabled broker
@@ -23,18 +42,12 @@
     client.onMessageArrived = function (message) {
         messageNumber++;
         console.log("RECEIVE ON " + message.destinationName + " PAYLOAD " + message.payloadString);
+        var json = JSON.parse(message.payloadString);
+        if (json.clientId == clientId) {
+            json.clientId = "Tu";
+        }
+        addMessages(json.clientId, json.message);
     };
-
-    function sendMessage() {
-        setInterval(() => {
-            data = { id: 'hola'+messageNumber+'',  clientId: clientId };
-            messageNumber++;
-            message = new Paho.MQTT.Message(JSON.stringify(data));
-            message.destinationName = "/topic/test";
-            client.send(message);
-            console.log(clientId+" SENT MESSAGE");
-        }, 10000);
-    }
 
     var options = {
         timeout: 3,
@@ -42,7 +55,6 @@
         keepAliveInterval: 30,
         onSuccess: function () {
             console.log("CONNECTION SUCCESS");
-            sendMessage();
             client.subscribe('/topic/test', {qos: 1});
         },
         onFailure: function (message) {
