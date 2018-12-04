@@ -1,5 +1,34 @@
 version: '3'
+
+volumes:
+    logs:
+        driver: local
+
 services:
+  # PHP Backend to validate users to MongoDB
+  php-auth-server:
+    image: php:7-alpine
+    working_dir: /var/www
+    command: php -S 0.0.0.0:8080 -t public
+    environment:
+        docker: "true"
+    ports:
+        - 8080:8080
+    volumes:
+        - ./mqtt-php-auth-server:/var/www
+        - logs:/var/www/logs
+
+  # Mongo Database
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+
+  # RabbitMQ Node with Web-mqtt pluguin
   rabbitmq-node:
     build: .
     ports:
