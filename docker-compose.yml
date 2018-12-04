@@ -31,6 +31,8 @@ services:
   # RabbitMQ Node with Web-mqtt pluguin
   rabbitmq-node:
     build: .
+    volumes:
+      - ./docker-config/rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
     ports:
      - "5672:5672"
      - "15672:15672"
