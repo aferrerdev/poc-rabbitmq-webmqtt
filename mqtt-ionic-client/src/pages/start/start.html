@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>MQTT POC</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+        <ion-item>
+          <ion-label fixed>Username</ion-label>
+          <ion-input [(ngModel)]="username" type="text" value=""></ion-input>
+        </ion-item>
+        <button (click)="continue()" ion-button full>Continue</button>
+      </ion-list>
+</ion-content>
