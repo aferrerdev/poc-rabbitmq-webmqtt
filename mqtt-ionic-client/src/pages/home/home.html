@@ -1,25 +1,39 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar align-title="center" hideBackButton>
+    <ion-buttons left>
+      <button (click)="logout()" ion-button icon-only>
+        <ion-icon name="md-exit"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
-      Hello {{ username }} 
+      Hello {{ username }}
     </ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon *ngIf="!wsocket.isConnected()" name="md-warning"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
-    <p *ngIf="isConnected">Connected to MQTT Service</p>
-    <p *ngIf="!isConnected">ERROR: Not connected to MQTT Service</p>
-    <ion-list>
-        <ion-item *ngFor="let message of messages">
-          <h2>{{ message.client }}</h2>
-          <p>{{ message.message }}</p>
-        </ion-item>
-      </ion-list>
+  <div class="speech-wrapper">
+    <div *ngFor="let message of messages">
+      <div class="bubble" [ngClass]="{ 'alt': message.client == username }" class="bubble">
+        <div class="txt">
+          <p class="name">{{ message.client == username ? 'Me' : message.client }}</p>
+          <p class="message">{{ message.message }}</p>
+          <span class="timestamp">10:20 pm</span>
+        </div>
+        <div class="bubble-arrow" [ngClass]="{ 'alt': message.client == username }"></div>
+      </div>
+    </div>
+  </div>
 </ion-content>
 <ion-footer>
   <ion-item>
     <ion-input [(ngModel)]="inputText" type="text"></ion-input>
     <button (click)="sendMessage()" item-end ion-button icon-end color="dark" clear>
       Send
-    <ion-icon name="send"></ion-icon></button>
+      <ion-icon name="send"></ion-icon></button>
   </ion-item>
 </ion-footer>

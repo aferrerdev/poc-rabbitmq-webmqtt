@@ -1,30 +1,30 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, Platform, ToastController, Content } from 'ionic-angular';
 import { WebsocketsProvider } from '../../providers/websockets/websockets';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
+  @ViewChild(Content) content: Content;
 
   username: string;
   isConnected: Boolean = false;
   inputText: string;
   messages: Array<{ client: string, message: string }>;
 
-  constructor(public navCtrl: NavController, private navParams: NavParams,public wsocket: WebsocketsProvider) {
+  constructor(public navCtrl: NavController, private navParams: NavParams, public wsocket: WebsocketsProvider, public toast: ToastController) {
     this.username = this.navParams.get('username');
     this.messages = wsocket.messages;
   } 
 
   ionViewDidLoad() {
-    this.wsocket.connect(this.username, "userpassword");
+    this.wsocket.startSession(this.username, "userpassword");
     this.wsocket.messagesSubject.subscribe((messages) => {
       this.messages = messages;
-    });
-    this.wsocket.connectedSubject.subscribe((status) => {
-      this.isConnected = status;
+      this.content.scrollToBottom();
     });
   }
 
@@ -33,6 +33,16 @@ export class HomePage {
       this.wsocket.send({ client: this.username , message: this.inputText });
       this.inputText = "";
     }
+  }
+
+  logout() {
+    let toast = this.toast.create({
+      message: 'Disconected',
+      duration: 2000
+    });
+    toast.present();
+    localStorage.removeItem("username");
+    this.navCtrl.pop();
   }
 
   ionViewWillLeave() {
