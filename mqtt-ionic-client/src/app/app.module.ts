@@ -5,24 +5,25 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 import { WebsocketsProvider } from '../providers/websockets/websockets';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { StartPageModule } from '../pages/start/start.module';
+import { HomePageModule } from '../pages/home/home.module';
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpClientModule
+    HttpClientModule,
+    StartPageModule,
+    HomePageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   providers: [
     StatusBar,
