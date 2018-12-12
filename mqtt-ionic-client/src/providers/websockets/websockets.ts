@@ -7,7 +7,7 @@ import { Subject } from 'rxjs/Subject';
 export class WebsocketsProvider {
 
   // Connection settings
-  private host: string = "192.168.7.197";
+  private host: string = "192.168.7.253";
   private port: number = 15675;
   private username: string;
   private token: string;
@@ -89,8 +89,10 @@ export class WebsocketsProvider {
 
   public reconnection() {
     let timeout = setTimeout(() => {
-      this.connect(this.username, this.token);
-      clearTimeout(timeout);
+      if (!this.client.isConnected) {
+        this.connect(this.username, this.token);
+        clearTimeout(timeout);
+      }
     }, 5000)
   }
 }

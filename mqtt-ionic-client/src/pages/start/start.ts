@@ -16,10 +16,7 @@ export class StartPage {
   }
 
   ionViewDidLoad() {
-    let username = localStorage.getItem("username");
-    if (username != null || username != "") {
-      this.navCtrl.setRoot(HomePage, { username: username })
-    }
+    this.username = localStorage.getItem("username");
   }
 
   continue() {

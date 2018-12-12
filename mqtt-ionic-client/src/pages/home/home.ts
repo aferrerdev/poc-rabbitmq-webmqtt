@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Platform, ToastController, Content } from 'ionic-angular';
+import { NavController, NavParams, ToastController, Content } from 'ionic-angular';
 import { WebsocketsProvider } from '../../providers/websockets/websockets';
-import { Subscription } from 'rxjs/Subscription';
+import { StartPage } from '../start/start';
 
 @Component({
   selector: 'page-home',
@@ -41,8 +41,7 @@ export class HomePage {
       duration: 2000
     });
     toast.present();
-    localStorage.removeItem("username");
-    this.navCtrl.pop();
+    this.navCtrl.setRoot(StartPage);
   }
 
   ionViewWillLeave() {
